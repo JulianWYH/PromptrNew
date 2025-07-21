@@ -1,0 +1,225 @@
+@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@400;700&display=swap');
+
+/* General layout */
+.page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url('/background.png') center/cover no-repeat fixed;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 20px;
+}
+
+/* For logged in users with navbar */
+.page.with-navbar {
+  padding-top: 90px;
+}
+
+.main {
+  background: rgba(255, 255, 255, 0.3);
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+}
+
+/* Upload Section */
+.generator {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.imageUpload {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.input {
+  padding: 10px;
+  border-radius: 10px;
+  border: 2px dashed #ccc;
+  background-color: #fafafa;
+  cursor: pointer;
+  text-align: center;
+}
+
+.button {
+  padding: 12px;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #005bb5;
+}
+
+/* Preview Layout */
+.previewContainer {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.imageBox {
+  flex: 1;
+  min-width: 200px;
+}
+
+.imageBox img {
+  max-width: 100%;
+  border-radius: 10px;
+  display: block;
+}
+
+.analysisBox {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* AI Detection Badge */
+.ai-result {
+  font-size: 1.4rem;
+  font-weight: bold;
+  padding: 16px;
+  border-radius: 12px;
+  display: inline-block;
+  width: 100%;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Detection ranking styles */
+.most-likely-ai {
+  background-color: #ffe5e5;
+  color: #c70000;
+  border: 2px solid #c70000;
+}
+
+.likely-ai {
+  background-color: #fff0d6;
+  color: #cc7a00;
+  border: 2px solid #cc7a00;
+}
+
+.likely-no-ai {
+  background-color: #d9f3ff;
+  color: #0077b6;
+  border: 2px solid #0077b6;
+}
+
+.most-likely-no-ai {
+  background-color: #e1fbe1;
+  color: #228b22;
+  border: 2px solid #228b22;
+}
+
+/* Gemini quality analysis style */
+.quality-analysis {
+  font-style: italic;
+  font-size: 1rem;
+  color: #444;
+  margin-top: 10px;
+}
+
+/* Error Message */
+.error {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Animation */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .page {
+    padding: 10px;
+    background-attachment: scroll; /* Better performance on mobile */
+  }
+  
+  .page.with-navbar {
+    padding-top: 70px;
+  }
+  
+  .main {
+    padding: 20px;
+    max-width: 100%;
+    margin: 0 10px;
+  }
+  
+  .generator {
+    gap: 15px;
+  }
+  
+  .imageUpload {
+    gap: 8px;
+  }
+  
+  .input {
+    padding: 12px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  .button {
+    padding: 12px 20px;
+    font-size: 16px;
+    min-height: 44px; /* Touch target size */
+  }
+  
+  .result {
+    padding: 15px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 5px;
+  }
+  
+  .main {
+    padding: 15px;
+    margin: 0 5px;
+  }
+  
+  .generator {
+    gap: 12px;
+  }
+  
+  .input {
+    padding: 10px;
+  }
+  
+  .button {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+}
