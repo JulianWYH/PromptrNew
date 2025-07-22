@@ -38,6 +38,13 @@ export async function GET() {
       JSON.stringify({
         url: photo.urls.small,
         alt_description: photo.alt_description || 'No description available',
+        attribution: {
+          photographer: photo.user.name,
+          photographerUsername: photo.user.username,
+          photographerProfile: `https://unsplash.com/@${photo.user.username}?utm_source=PromptrNew&utm_medium=referral`,
+          unsplashUrl: `https://unsplash.com/?utm_source=PromptrNew&utm_medium=referral`,
+          imageUrl: `https://unsplash.com/photos/${photo.id}?utm_source=PromptrNew&utm_medium=referral`
+        }
       }),
       {
         headers: { 'Content-Type': 'application/json' },

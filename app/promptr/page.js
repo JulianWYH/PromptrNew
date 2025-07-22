@@ -25,6 +25,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [imageURL, setImageUrl] = useState(null);
+  const [imageAttribution, setImageAttribution] = useState(null);
   const [UnSLoading, setUnSLoading] = useState(true);
   const [isClient, setIsClient] = useState(false);
   const [username, setUsername] = useState('');
@@ -97,6 +98,7 @@ export default function Home() {
         }
         
         setImageUrl(data.url);
+        setImageAttribution(data.attribution);
       } catch (error) {
         console.error("Failed to fetch image:", error);
         setError(`Failed to load Unsplash image: ${error.message}`);
@@ -370,9 +372,31 @@ export default function Home() {
           ) : UnSLoading ? (
             <p>Loading image...</p>
           ) : imageURL ? (
-            <>
+            <div className="targetImageContainer">
               <img src={imageURL} alt="Unsplash Image" />
-            </>
+              {imageAttribution && (
+                <div className="unsplashAttribution">
+                  <p>
+                    Photo by{' '}
+                    <a 
+                      href={imageAttribution.photographerProfile}
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                    >
+                      {imageAttribution.photographer}
+                    </a>{' '}
+                    on{' '}
+                    <a 
+                      href={imageAttribution.unsplashUrl}
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                    >
+                      Unsplash
+                    </a>
+                  </p>
+                </div>
+              )}
+            </div>
           ) : (
             <p>Could not load image.</p>
           )}

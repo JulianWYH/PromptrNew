@@ -22,6 +22,7 @@ export default function GameRoom({ params }) {
 
   // Round State
   const [targetImage, setTargetImage] = useState(null);
+  const [imageAttribution, setImageAttribution] = useState(null);
   const [playerPrompt, setPlayerPrompt] = useState('');
   const [generatedImages, setGeneratedImages] = useState([]);
   const [attemptsLeft, setAttemptsLeft] = useState(5);
@@ -64,6 +65,7 @@ export default function GameRoom({ params }) {
       setGameState(data.gameState);
       setCurrentRound(data.currentRound);
       setTargetImage(data.targetImage);
+      setImageAttribution(data.imageAttribution);
       setHasSubmitted(false);
       setGeneratedImages([]);
       setAttemptsLeft(5);
@@ -96,6 +98,7 @@ export default function GameRoom({ params }) {
     socket.on('next-round', (data) => {
       setCurrentRound(data.currentRound);
       setTargetImage(data.targetImage);
+      setImageAttribution(data.imageAttribution);
       setHasSubmitted(false);
       setGeneratedImages([]);
       setAttemptsLeft(5);
@@ -307,7 +310,31 @@ export default function GameRoom({ params }) {
             {loading && !targetImage ? (
               <div className="imagePlaceholder">Loading target image...</div>
             ) : (
-              <img src={targetImage} alt="Target" className="targetImage" />
+              <div className="targetImageContainer">
+                <img src={targetImage} alt="Target" className="targetImage" />
+                {imageAttribution && (
+                  <div className="unsplashAttribution">
+                    <p>
+                      Photo by{' '}
+                      <a 
+                        href={imageAttribution.photographerProfile}
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                      >
+                        {imageAttribution.photographer}
+                      </a>{' '}
+                      on{' '}
+                      <a 
+                        href={imageAttribution.unsplashUrl}
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                      >
+                        Unsplash
+                      </a>
+                    </p>
+                  </div>
+                )}
+              </div>
             )}
           </div>
 

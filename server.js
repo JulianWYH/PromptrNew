@@ -306,6 +306,7 @@ app.prepare().then(() => {
         
         if (unsplashData.url) {
           room.targetImage = unsplashData.url;
+          room.imageAttribution = unsplashData.attribution; // Store attribution data
           console.log(`[START-GAME] Target image set: ${room.targetImage}`);
           
           // Get description
@@ -331,7 +332,8 @@ app.prepare().then(() => {
       io.to(roomId).emit('game-started', {
         gameState: room.gameState,
         currentRound: room.currentRound,
-        targetImage: room.targetImage
+        targetImage: room.targetImage,
+        imageAttribution: room.imageAttribution
       });
 
       console.log(`[START-GAME] Game successfully started in room ${roomId}`);
@@ -548,6 +550,7 @@ app.prepare().then(() => {
             
             if (unsplashData.url) {
               room.targetImage = unsplashData.url;
+              room.imageAttribution = unsplashData.attribution; // Store attribution data
               console.log(`[NEXT-ROUND] New target image: ${room.targetImage}`);
               
               console.log(`[NEXT-ROUND] Calling Gemini describe API...`);
@@ -571,7 +574,8 @@ app.prepare().then(() => {
           
           io.to(roomId).emit('next-round', {
             currentRound: room.currentRound,
-            targetImage: room.targetImage
+            targetImage: room.targetImage,
+            imageAttribution: room.imageAttribution
           });
           
           console.log(`[NEXT-ROUND] Successfully started round ${room.currentRound} in room ${roomId}`);
