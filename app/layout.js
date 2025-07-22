@@ -6,6 +6,7 @@ import "./css/navbar.css";
 import "./css/page.css";
 import "./css/freeplay.css";
 import Navbar from "./components/Navbar";
+import Head from "next/head"; // ⬅️ Import Head
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,12 +21,14 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "PROMPTR - AI Deepfake Detector Game",
   description: "Test your skills at detecting AI-generated images in this interactive game",
-  viewport: "width=device-width, initial-scale=1",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Navbar />
         {children}
@@ -33,4 +36,3 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
-
