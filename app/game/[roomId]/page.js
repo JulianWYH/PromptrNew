@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import useSocket from "../../../hooks/useSocket";
 import "../../css/gameroom.css";
 
+
 export default function GameRoom({ params }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -135,7 +136,7 @@ export default function GameRoom({ params }) {
     socket.emit('start-game', { roomId });
   }, [isPlayerHost, socket, roomId]);
 
-  const fetchNewTargetImage = async () => {
+  const fetchNewTargetImage = async () =>   {
     // This is now handled by the server via Socket.IO
     // Target images are fetched server-side and broadcast to all players
   };
@@ -304,43 +305,44 @@ export default function GameRoom({ params }) {
         </div>
 
         <div className="roomGameContent">
-          <div className="targetSection">
-            <h3>🎯 Target Image</h3>
-            <p>Recreate this image with your prompts!</p>
-            {loading && !targetImage ? (
-              <div className="imagePlaceholder">Loading target image...</div>
-            ) : (
-              <div className="targetImageContainer">
-                <img src={targetImage} alt="Target" className="targetImage" />
-                {imageAttribution && (
-                  <div className="unsplashAttribution">
-                    <p>
-                      Photo by{' '}
-                      <a 
-                        href={imageAttribution.photographerProfile}
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                      >
-                        {imageAttribution.photographer}
-                      </a>{' '}
-                      on{' '}
-                      <a 
-                        href={imageAttribution.unsplashUrl}
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                      >
-                        Unsplash
-                      </a>
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+          <div className="topSection">
+            <div className="targetSection">
+              <h3>🎯 Target Image</h3>
+              <p>Recreate this image with your prompts!</p>
+              {loading && !targetImage ? (
+                <div className="imagePlaceholder">Loading target image...</div>
+              ) : (
+                <div className="targetImageContainer">
+                  <img src={targetImage} alt="Target" className="targetImage" />
+                  {imageAttribution && (
+                    <div className="unsplashAttribution">
+                      <p>
+                        Photo by{' '}
+                        <a 
+                          href={imageAttribution.photographerProfile}
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                        >
+                          {imageAttribution.photographer}
+                        </a>{' '}
+                        on{' '}
+                        <a 
+                          href={imageAttribution.unsplashUrl}
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                        >
+                          Unsplash
+                        </a>  
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
 
-          <div className="promptSection">
-            <h3>✍️ Your Prompt</h3>
-            <div className="promptInput">
+            <div className="promptSection">
+              <h3>✍️ Your Prompt</h3>
+              <div className="promptInput">
               <input
                 type="text"
                 value={playerPrompt}
@@ -357,36 +359,37 @@ export default function GameRoom({ params }) {
                 {loading ? 'Generating...' : 'Generate'}
               </button>
             </div>
-          </div>
 
-          {generatedImages.length > 0 && (
-            <div className="generatedSection">
-              <h3>🖼️ Your Generated Images</h3>
-              <div className="imageGrid">
-                {generatedImages.map(img => (
-                  <div 
-                    key={img.id} 
-                    className={`generatedImageCard ${selectedImage?.id === img.id ? 'selected' : ''}`}
-                    onClick={() => setSelectedImage(img)}
+            {generatedImages.length > 0 && (
+              <div className="generatedImagesSubSection">
+                <h4>🖼️ Your Generated Images</h4>
+                <div className="imageGrid">
+                  {generatedImages.map(img => (
+                    <div 
+                      key={img.id} 
+                      className={`generatedImageCard ${selectedImage?.id === img.id ? 'selected' : ''}`}
+                      onClick={() => setSelectedImage(img)}
+                    >
+                      <img src={`data:image/png;base64,${img.base64}`} alt="Generated" />
+                      <p className="imagePrompt">"{img.prompt}"</p>
+                      {selectedImage?.id === img.id && <div className="selectedBadge">✓ Selected</div>}
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="submitSection">
+                  <button 
+                    onClick={submitFinalImage}
+                    disabled={!selectedImage || hasSubmitted || loading}
+                    className="submitBtn"
                   >
-                    <img src={`data:image/png;base64,${img.base64}`} alt="Generated" />
-                    <p className="imagePrompt">"{img.prompt}"</p>
-                    {selectedImage?.id === img.id && <div className="selectedBadge">✓ Selected</div>}
-                  </div>
-                ))}
+                    {hasSubmitted ? 'Submitted!' : 'Submit Selected Image'}
+                  </button>
+                </div>
               </div>
-              
-              <div className="submitSection">
-                <button 
-                  onClick={submitFinalImage}
-                  disabled={!selectedImage || hasSubmitted || loading}
-                  className="submitBtn"
-                >
-                  {hasSubmitted ? 'Submitted!' : 'Submit Selected Image'}
-                </button>
-              </div>
-            </div>
-          )}
+            )}
+          </div>
+          </div>
 
           {hasSubmitted && (
             <div className="waitingSubmit">

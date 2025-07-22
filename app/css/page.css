@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@100..900&display=swap');
 
 /* General layout */
 .page {
@@ -8,7 +8,7 @@
   align-items: center;
   min-height: 100vh;
   background: url('/background.png') center/cover no-repeat fixed;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Alexandria", sans-serif;
   padding: 20px;
 }
 

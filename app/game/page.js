@@ -130,14 +130,7 @@ export default function GameLobby() {
 
         <div className="gameRules">
           <h4>How to Play:</h4>
-          <ul>
-            <li>🎯 5 rounds of image recreation challenges</li>
-            <li>🖼️ Each round shows a target image from Unsplash</li>
-            <li>✍️ Write prompts to recreate the image using AI</li>
-            <li>🎲 Get 5 attempts per round to get the best match</li>
-            <li>🏆 Scores based on how close your image matches the original</li>
-            <li>👑 Highest total score after 5 rounds wins!</li>
-          </ul>
+          <p>In this game, you'll take on 5 rounds of image recreation challenges using AI. <br></br> Each round shows you a photo from <span style={{fontWeight: "bold"}}>Unsplash</span>, and your goal is to write prompts that recreate it as closely as possible.<br></br><br></br> You get up to 5 attempts per round to refine your image. The more accurate your recreation, the higher your score. After 5 rounds, the player with the highest total score wins!</p>
         </div>
       </div>
     </div>

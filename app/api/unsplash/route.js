@@ -4,7 +4,10 @@ export async function GET() {
   try {
     const accessKey = process.env.UNSPLASH_ACCESS_KEY;
     
+    console.log('Unsplash API called, access key present:', !!accessKey);
+    
     if (!accessKey) {
+      console.error('Unsplash access key not found in environment variables');
       return new Response(
         JSON.stringify({ error: 'Unsplash API key not configured' }),
         { 
@@ -14,6 +17,7 @@ export async function GET() {
       );
     }
 
+    console.log('Making request to Unsplash API...');
     const response = await axios.get('https://api.unsplash.com/photos/random', {
       params: {
         client_id: accessKey,
@@ -22,9 +26,11 @@ export async function GET() {
       },
     });
 
+    console.log('Unsplash API response status:', response.status);
     const photo = response.data[0] || response.data;
 
     if (!photo || !photo.urls) {
+      console.error('Invalid photo data received from Unsplash:', photo);
       return new Response(
         JSON.stringify({ error: 'No valid photo data received from Unsplash' }),
         { 
@@ -34,6 +40,7 @@ export async function GET() {
       );
     }
 
+    console.log('Successfully fetched image:', photo.urls.small);
     return new Response(
       JSON.stringify({
         url: photo.urls.small,
@@ -52,9 +59,11 @@ export async function GET() {
     );
   } catch (error) {
     console.error('Unsplash API error:', error.message);
+    console.error('Error details:', error.response?.data || error);
     
     // Handle specific error cases
     if (error.response?.status === 403) {
+      console.error('Unsplash API access denied - check API key');
       return new Response(
         JSON.stringify({ 
           error: 'Unsplash API rate limit exceeded or access denied',
@@ -67,12 +76,27 @@ export async function GET() {
         }
       );
     }
+
+    if (error.response?.status === 401) {
+      console.error('Unsplash API unauthorized - invalid API key');
+      return new Response(
+        JSON.stringify({ 
+          error: 'Unsplash API unauthorized',
+          details: 'Invalid API key'
+        }),
+        { 
+          status: 401,
+          headers: { 'Content-Type': 'application/json' } 
+        }
+      );
+    }
     
     return new Response(
       JSON.stringify({ 
         error: 'Failed to fetch image from Unsplash',
         details: error.response?.data?.errors || error.message,
-        status: error.response?.status || 'Unknown'
+        status: error.response?.status || 'Unknown',
+        type: error.constructor.name
       }),
       { 
         status: 500,

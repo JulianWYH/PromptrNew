@@ -37,7 +37,8 @@ const getApiBaseUrl = () => {
            `https://${process.env.RENDER_SERVICE_NAME}.onrender.com` ||
            `http://localhost:${process.env.PORT || 4000}`;
   }
-  return `http://localhost:${process.env.SOCKET_PORT || 3001}`;
+  // In development, Next.js API routes run on port 4000
+  return `http://localhost:4000`;
 };
 
 console.log('About to prepare Next.js app...');
@@ -302,6 +303,24 @@ app.prepare().then(() => {
         console.log(`[START-GAME] Fetching target image from Unsplash...`);
         // Get random image from Unsplash API
         const unsplashRes = await fetch(`${getApiBaseUrl()}/api/unsplash`);
+        
+        // Check if response is OK before parsing
+        if (!unsplashRes.ok) {
+          console.error(`[START-GAME] Unsplash API returned status: ${unsplashRes.status}`);
+          const errorText = await unsplashRes.text();
+          console.error(`[START-GAME] Error response: ${errorText.substring(0, 200)}...`);
+          throw new Error(`Unsplash API error: ${unsplashRes.status}`);
+        }
+        
+        // Check content type
+        const contentType = unsplashRes.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          console.error(`[START-GAME] Expected JSON but got: ${contentType}`);
+          const responseText = await unsplashRes.text();
+          console.error(`[START-GAME] Response body: ${responseText.substring(0, 200)}...`);
+          throw new Error(`Invalid response type: ${contentType}`);
+        }
+        
         const unsplashData = await unsplashRes.json();
         
         if (unsplashData.url) {
@@ -457,6 +476,19 @@ app.prepare().then(() => {
           console.log(`[CALCULATE-SCORES] Submission description: "${submission.description}"`);
           console.log(`[CALCULATE-SCORES] Target description: "${room.targetDescription}"`);
           
+          // Check if we have valid descriptions
+          if (!submission.description || !room.targetDescription) {
+            console.error(`[CALCULATE-SCORES] Missing descriptions for ${submission.playerName} - submission: "${submission.description}", target: "${room.targetDescription}"`);
+            // Assign a low score instead of skipping
+            scores.push({
+              playerName: submission.playerName,
+              score: 0,
+              similarity: 0,
+              description: submission.description || 'No description available'
+            });
+            continue;
+          }
+          
           const compareRes = await fetch(`${getApiBaseUrl()}/api/minilm`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -468,6 +500,15 @@ app.prepare().then(() => {
           
           if (!compareRes.ok) {
             console.error(`[CALCULATE-SCORES] API error for ${submission.playerName}: ${compareRes.status} ${compareRes.statusText}`);
+            const errorText = await compareRes.text();
+            console.error(`[CALCULATE-SCORES] Error response: ${errorText}`);
+            // Assign a low score instead of skipping
+            scores.push({
+              playerName: submission.playerName,
+              score: 0,
+              similarity: 0,
+              description: submission.description || 'API Error'
+            });
             continue;
           }
           
@@ -546,6 +587,24 @@ app.prepare().then(() => {
             
             console.log(`[NEXT-ROUND] Calling Unsplash API...`);
             const unsplashRes = await fetch(`${getApiBaseUrl()}/api/unsplash`);
+            
+            // Check if response is OK before parsing
+            if (!unsplashRes.ok) {
+              console.error(`[NEXT-ROUND] Unsplash API returned status: ${unsplashRes.status}`);
+              const errorText = await unsplashRes.text();
+              console.error(`[NEXT-ROUND] Error response: ${errorText.substring(0, 200)}...`);
+              throw new Error(`Unsplash API error: ${unsplashRes.status}`);
+            }
+            
+            // Check content type
+            const contentType = unsplashRes.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+              console.error(`[NEXT-ROUND] Expected JSON but got: ${contentType}`);
+              const responseText = await unsplashRes.text();
+              console.error(`[NEXT-ROUND] Response body: ${responseText.substring(0, 200)}...`);
+              throw new Error(`Invalid response type: ${contentType}`);
+            }
+            
             const unsplashData = await unsplashRes.json();
             
             if (unsplashData.url) {
