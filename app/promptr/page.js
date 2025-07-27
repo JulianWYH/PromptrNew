@@ -446,14 +446,14 @@ export default function Home() {
                 <p>Gemini Analysis: {qualityAnalysis}</p>
               )}
               {similarity !== null && (
-                <p>Image Similarity: {(similarity * 100).toFixed(2)}%</p>
+                <p>Image Similarity: {(similarity * 100).toFixed(1)}%</p>
               )}
               {promptSimilarity !== null && (
-                <p>Prompt Grade: {(promptSimilarity * 100).toFixed(2)}%</p>
+                <p>Prompt Grade: {(promptSimilarity * 100).toFixed(1)}%</p>
               )}
               {finalScore !== null && (
                 <div>
-                  <p><strong>Final Score:</strong> {finalScore.toFixed(2)}%</p>
+                  <p><strong>Final Score:</strong> {finalScore.toFixed(1)}%</p>
                   
                   {/* Ask for credentials choice */}
                   {askForCredentials && (
